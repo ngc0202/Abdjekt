@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 /**
  *
@@ -96,5 +97,23 @@ public class Game {
 
     public static void quit() {
         System.exit(0);
+    }
+
+    public static Item newItem(String name){
+        ArrayList<Item> spawned = Main.spawned;
+        Item item = spawned.get(0);
+        boolean bspawned = false;
+        for(int i=0;i<spawned.size();i++){
+            if(spawned.get(i).getName().equalsIgnoreCase(name)){
+                item = spawned.get(i);
+                bspawned = true;
+                break;
+            }
+        }
+        if(!bspawned){
+            item = new Item(name);
+            Main.spawned.add(item);
+        }
+        return item;
     }
 }

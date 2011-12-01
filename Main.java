@@ -1,6 +1,7 @@
 package abdjekt;
 
 import static java.lang.System.*;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -12,9 +13,12 @@ public class Main {
     public static int withIndex;
     public static String object;
     public static World world;
+    public static ArrayList<Item> spawned;
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(in);
+        spawned = new ArrayList<Item>();
+        spawned.add(new Item("foo"));
         world = new World(25);
 
         out.println("Welcome to Abdjekt!");
@@ -159,7 +163,10 @@ public class Main {
                 }
                 continue;
             }
-            abdjektReader.process(new Item(subject), new Item(object), verb);
+            if (object.equals("")) {
+                object = "foo";
+            }
+            abdjektReader.process(Game.newItem(subject), Game.newItem(object), verb);
         }
     }
 }
