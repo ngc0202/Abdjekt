@@ -1,5 +1,6 @@
 package abdjekt;
 
+import java.io.File;
 import static java.lang.System.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -16,11 +17,15 @@ public class Main {
     public static ArrayList<Item> spawned;
 
     public static void main(String[] args) {
+        File dir = new File(System.getenv("APPDATA") + "\\abdjekt\\");
+        dir.mkdir();
+
         Scanner keyboard = new Scanner(in);
         spawned = new ArrayList<Item>();
         spawned.add(new Item("foo"));
         world = new World(25);
-
+        File file = new File(System.getenv("APPDATA")+ "\\abdjekt\\foo.abj");
+        
         out.println("Welcome to Abdjekt!");
         out.println("To spawn an object, use: spawn <noun>. To remove them, use: remove <noun>");
         out.println("To look at what you have spawned, type: look.");
@@ -102,8 +107,7 @@ public class Main {
 
             if (verb.equals("quit")) {
                 //               System.out.println(""); //TODO add quit text
-                Game.quit();
-                continue;
+                break;
             }
             if (verb.equals("clean")) {
                 world.clear();

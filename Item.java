@@ -29,6 +29,7 @@ public class Item {
         name = iname;
         urlname = cleanWord(name);
         itemfile = findFile();
+ 
         spawnText = findSpawnText();
         removeText = findRemoveText();
         canSpawn = findCanSpawn();
@@ -38,6 +39,7 @@ public class Item {
         canMake = findCanMake();
         makeReqs = findMakeReqs();
         limit = findLimit();
+       
     }
 
     public final String getName() {
@@ -91,7 +93,7 @@ public class Item {
     private File findFile() {
         File file = null;
         try {
-            file = new File(name + ".abj");
+            file = new File(System.getenv("APPDATA")+ "\\abdjekt\\" + name + ".abj");
             InputStream inputStream = new URL("http://kicneoj.webs.com/abdjekt/abdjekts/" + urlname + ".abj").openStream();
             OutputStream out = new FileOutputStream(file);
             byte buf[] = new byte[1024];
@@ -100,6 +102,7 @@ public class Item {
             while ((len = inputStream.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
+            out.flush();
             out.close();
             inputStream.close();
         } catch (IOException e) {
