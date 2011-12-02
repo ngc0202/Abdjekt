@@ -74,10 +74,6 @@ public class Item {
         return outputs;
     }
 
-    public final File getItemFile() {
-        return itemfile;
-    }
-
     public final boolean canMake() {
         return canMake;
     }
