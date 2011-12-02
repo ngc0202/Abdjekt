@@ -69,17 +69,14 @@ public class Main {
             }
             if (withIndex == -1) {
                 subject = inputArray[1];
-                if (inputArray[2] != null) {
+                if (inputArray[2] != null && !inputArray[2].equals("")) {
                     subject += " " + inputArray[2];
                 }
             } else {
-                for (int i = 1; i < withIndex; i++) {
-                    if (i == 1) {
-                        subject = inputArray[i];
-                    } else {
-                        if (i > 1 && i < withIndex - 1) {
-                            subject += " " + inputArray[i];
-                        }
+                if (withIndex >= 2) {
+                    subject = inputArray[1];
+                    if (withIndex == 3) {
+                        subject += " " + inputArray[2];
                     }
                 }
             }
@@ -166,7 +163,7 @@ public class Main {
             if (object.equals("")) {
                 object = "foo";
             }
-            if(!Item.exists(subject) || subject.equalsIgnoreCase("foo")){
+            if (!Item.exists(subject) || subject.equalsIgnoreCase("foo")) {
                 System.out.println("What is a " + subject + "?");
                 continue;
             }
