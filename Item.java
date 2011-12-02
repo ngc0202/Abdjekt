@@ -1,4 +1,3 @@
-
 package abdjekt;
 
 import java.io.File;
@@ -11,10 +10,6 @@ import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-/**
- *
- * @author ngc0202
- */
 public class Item {
 
     private String name;
@@ -375,5 +370,15 @@ public class Item {
             }
         }
         return cleanword;
+    }
+
+    public static boolean exists(String name) {
+        try {
+            if (Game.getObjectReader(name).readLine().equals("<abdjekt>")) {
+                return true;
+            }
+        } catch (IOException ex) {
+        } catch (NullPointerException npe) {}
+        return false;
     }
 }

@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- *
- * @author ngc0202
- */
 public class World {
 
 //    private Item[] world;
@@ -112,7 +108,7 @@ public class World {
         boolean check = true;
         for (int i = 0; i < reqs[0].length; i++) {
             if (reqs[0][i] != null && reqs[1][i] != null) {
-                if (getCount(new Item(reqs[1][i])) != Integer.parseInt(reqs[0][i])) {
+                if (getCount(Game.newItem(reqs[1][i])) != Integer.parseInt(reqs[0][i])) {
                     check = false;
                 }
             }
@@ -123,7 +119,7 @@ public class World {
     public boolean canMake(String iobject) {
         boolean check = false;
         if (canSpawn(iobject)) {
-            Item object = new Item(iobject);
+            Item object = Game.newItem(iobject);
             Scanner rfile = null;
             try {
                 rfile = new Scanner(object.getItemFile());
@@ -151,12 +147,9 @@ public class World {
                 return true;
             }
         }
-        try {
-            if (Game.getObjectReader(name).readLine().equals("<abdjekt>")) {
+            if (Item.exists(name)) {
                 return true;
             }
-        } catch (IOException ex) {
-        }
         return false;
     }
 

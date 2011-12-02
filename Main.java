@@ -166,6 +166,10 @@ public class Main {
             if (object.equals("")) {
                 object = "foo";
             }
+            if(!Item.exists(subject) || subject.equalsIgnoreCase("foo")){
+                System.out.println("What is a " + subject + "?");
+                continue;
+            }
             abdjektReader.process(Game.newItem(subject), Game.newItem(object), verb);
         }
     }

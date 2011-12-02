@@ -8,10 +8,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-/**
- *
- * @author ngc0202
- */
 public class Game {
 
     private static int mode = 2;
