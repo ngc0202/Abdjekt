@@ -18,6 +18,7 @@ public class Item {
     private String removeText;
     private boolean canSpawn;
     private boolean canMake;
+    private int limit;
     private String article;
     private String[][] actions;
     private String[][] outputs;
@@ -36,6 +37,7 @@ public class Item {
         outputs = findOutputs();
         canMake = findCanMake();
         makeReqs = findMakeReqs();
+        limit = findLimit();
     }
 
     public final String getName() {
@@ -70,16 +72,16 @@ public class Item {
         return outputs;
     }
 
-    public final File getItemFile() {
-        return itemfile;
-    }
-
     public final boolean canMake() {
         return canMake;
     }
 
     public final String[][] getMakeReqs() {
         return makeReqs;
+    }
+
+    public final int getLimit() {
+        return limit;
     }
 
     private File findFile() {
@@ -168,7 +170,7 @@ public class Item {
             }
             return check;
         } else {
-            return true;
+            return Main.world.getCount(this) < limit;
         }
     }
 
@@ -352,6 +354,22 @@ public class Item {
         return reqs;
     }
 
+    private int findLimit() {
+        try {
+            Scanner file = new Scanner(itemfile);
+            String[] acur;
+            String cur = "";
+            while(file.hasNext() && cur.equals("</flags>")){
+                cur = file.nextLine();
+                acur = cur.split(" ");
+                if(acur[0].equalsIgnoreCase("limit")){
+                    return Integer.parseInt(acur[1]);
+                }
+            }
+        } catch (FileNotFoundException ex) {}
+        return -1;
+    }
+
     public static String cleanWord(String word) {
         String cleanword = "";
         if (word != null) {
@@ -378,7 +396,8 @@ public class Item {
                 return true;
             }
         } catch (IOException ex) {
-        } catch (NullPointerException npe) {}
+        } catch (NullPointerException npe) {
+        }
         return false;
     }
 }
