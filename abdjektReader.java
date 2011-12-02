@@ -102,6 +102,11 @@ public class abdjektReader {
                 break;
             }
         }
+
+        if (found == -1){
+            System.out.println("You can't do that.");
+            return;
+        }
         for (int i = 2; i < outputArray[found].length; i++) {
             if (outputArray[found][i] != null) {
                 if (outputArray[found][i].equals("<object>")) {
