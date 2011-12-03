@@ -61,8 +61,8 @@ public class World {
     }
 
     public boolean remove(Item object) {
-        for(int i=0;i<world.size();i++){
-            if(object.getName().equals(world.get(i).getName())){
+        for (int i = 0; i < world.size(); i++) {
+            if (object.getName().equals(world.get(i).getName())) {
                 world.remove(i);
                 return true;
             }
@@ -147,9 +147,9 @@ public class World {
                 return true;
             }
         }
-            if (Item.exists(name)) {
-                return true;
-            }
+        if (Item.exists(name)) {
+            return true;
+        }
         return false;
     }
 

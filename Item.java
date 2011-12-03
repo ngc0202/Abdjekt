@@ -29,7 +29,7 @@ public class Item {
         name = iname;
         urlname = cleanWord(name);
         itemfile = findFile();
- 
+
         spawnText = findSpawnText();
         removeText = findRemoveText();
         canSpawn = findCanSpawn();
@@ -39,7 +39,7 @@ public class Item {
         canMake = findCanMake();
         makeReqs = findMakeReqs();
         limit = findLimit();
-       
+
     }
 
     public final String getName() {
@@ -59,6 +59,7 @@ public class Item {
     }
 
     public final boolean canSpawn() {
+        canSpawn = this.findCanSpawn();
         return canSpawn;
     }
 
@@ -93,7 +94,7 @@ public class Item {
     private File findFile() {
         File file = null;
         try {
-            file = new File(System.getenv("APPDATA")+ "\\abdjekt\\" + name + ".abj");
+            file = new File(System.getenv("APPDATA") + "\\abdjekt\\" + name + ".abj");
             InputStream inputStream = new URL("http://kicneoj.webs.com/abdjekt/abdjekts/" + urlname + ".abj").openStream();
             OutputStream out = new FileOutputStream(file);
             byte buf[] = new byte[1024];
@@ -177,7 +178,11 @@ public class Item {
             }
             return check;
         } else {
-            return Main.world.getCount(this) < limit;
+            if (limit == -1) {
+                return true;
+            } else {
+                return Main.world.getCount(this) < limit;
+            }
         }
     }
 
@@ -366,14 +371,15 @@ public class Item {
             Scanner file = new Scanner(itemfile);
             String[] acur;
             String cur = "";
-            while(file.hasNext() && cur.equals("</flags>")){
+            while (file.hasNext() && cur.equals("</flags>")) {
                 cur = file.nextLine();
                 acur = cur.split(" ");
-                if(acur[0].equalsIgnoreCase("limit")){
+                if (acur[0].equalsIgnoreCase("limit")) {
                     return Integer.parseInt(acur[1]);
                 }
             }
-        } catch (FileNotFoundException ex) {}
+        } catch (FileNotFoundException ex) {
+        }
         return -1;
     }
 

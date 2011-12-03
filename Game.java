@@ -91,22 +91,18 @@ public class Game {
         return mode;
     }
 
-    public static void quit() {
-        System.exit(0);
-    }
-
-    public static Item newItem(String name){
+    public static Item newItem(String name) {
         ArrayList<Item> spawned = Main.spawned;
         Item item = spawned.get(0);
         boolean bspawned = false;
-        for(int i=0;i<spawned.size();i++){
-            if(spawned.get(i).getName().equalsIgnoreCase(name)){
+        for (int i = 0; i < spawned.size(); i++) {
+            if (spawned.get(i).getName().equalsIgnoreCase(name)) {
                 item = spawned.get(i);
                 bspawned = true;
                 break;
             }
         }
-        if(!bspawned){
+        if (!bspawned) {
             item = new Item(name);
             Main.spawned.add(item);
         }

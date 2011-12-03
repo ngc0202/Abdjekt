@@ -7,17 +7,17 @@ public class abdjektReader {
         World world = Main.world;
 
         if (verb.equals("spawn")) {
-            if (world.canSpawn(subject.getURLName()))  {
-                    if (subject.canSpawn()) {
-                        world.add(subject);
-                        if (!Main.world.checkMax(1) && (subject.getSpawnText() == null || subject.getSpawnText().equals(""))) {
-                            System.out.println("You spawn " + subject.getArticle() + subject.getName() + ".");
-                        } else {
-                            System.out.println(subject.getSpawnText());
-                        }
+            if (world.canSpawn(subject.getURLName())) {
+                if (subject.canSpawn()) {
+                    world.add(subject);
+                    if (!Main.world.checkMax(1) && (subject.getSpawnText() == null || subject.getSpawnText().equals(""))) {
+                        System.out.println("You spawn " + subject.getArticle() + subject.getName() + ".");
                     } else {
-                        System.out.println("You are unable to spawn " + subject.getArticle() + subject.getName() + ".");
+                        System.out.println(subject.getSpawnText());
                     }
+                } else {
+                    System.out.println("You are unable to spawn " + subject.getArticle() + subject.getName() + ".");
+                }
             } else {
                 System.out.println("What is a " + subject.getName() + "?");
             }
@@ -103,7 +103,7 @@ public class abdjektReader {
             }
         }
 
-        if (found == -1){
+        if (found == -1) {
             System.out.println("You can't do that.");
             return;
         }
@@ -149,5 +149,5 @@ public class abdjektReader {
                 world.clear();
             }
         }
-    }   
+    }
 }

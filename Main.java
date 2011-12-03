@@ -24,8 +24,8 @@ public class Main {
         spawned = new ArrayList<Item>();
         spawned.add(new Item("foo"));
         world = new World(25);
-        File file = new File(System.getenv("APPDATA")+ "\\abdjekt\\foo.abj");
-        
+        File file = new File(System.getenv("APPDATA") + "\\abdjekt\\foo.abj");
+
         out.println("Welcome to Abdjekt!");
         out.println("To spawn an object, use: spawn <noun>. To remove them, use: remove <noun>");
         out.println("To look at what you have spawned, type: look.");
