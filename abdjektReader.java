@@ -33,10 +33,10 @@ public class abdjektReader {
                     }
 
                 } else {
-                    System.out.println("There is no " + subject.getName() + " here.");
+                    System.out.println("There is no " + Main.subject + " here.");
                 }
             } else {
-                System.out.println("There is no " + subject.getName() + " here.");
+                System.out.println("There is no " + Main.subject + " here.");
             }
             return;
         }
@@ -76,16 +76,17 @@ public class abdjektReader {
                     System.out.println("You cannot craft " + subject.getArticle() + subject.getName() + ".");
                 }
             } else {
-                System.out.println("What is a " + subject.getName() + "?");
+                System.out.println("What is a " + Main.subject + "?");
             }
             return;
         }
         if (!world.isSpawned(subject)) {
-            System.out.println("There is no " + subject.getName() + " here.");
+            System.out.println("There is no " + Main.subject + " here.");
             return;
         }
         if (!world.isSpawned(object)) {
-            System.out.println("There is no " + object.getName() + " here.");
+            //System.out.println("There is no " + object.getName() + " here.");
+            System.out.println("There is no " + Main.object + " here.");
             return;
         }
         if (subject.equals(object)) {
@@ -140,10 +141,18 @@ public class abdjektReader {
         }
         for (int i = 2; i < actionArray[found].length; i++) {
             if (actionArray[found][i].equals("spawn")) {
-                world.add(Game.newItem(Item.cleanWord(actionArray[found][i + 1])));
+                if (actionArray[found][found+1].equals("<object>")){
+                    world.add(Game.newItem(subject.getName()));
+                }else{
+                    world.add(Game.newItem(Item.cleanWord(actionArray[found][i + 1])));
+                }
             }
             if (actionArray[found][i].equals("remove")) {
-                world.remove(Game.newItem(actionArray[found][i + 1]));
+                if (actionArray[found][i+1].equals("<object>")){
+                world.remove(subject.getName());
+                }else{
+                    world.remove(Game.newItem(actionArray[found][i + 1]));   
+                }
             }
             if (actionArray[found][i].equals("clean")) {
                 world.clear();

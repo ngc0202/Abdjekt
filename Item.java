@@ -16,6 +16,7 @@ public class Item {
     private String urlname;
     private String spawnText;
     private String removeText;
+    private String masterAlias;
     private boolean canSpawn;
     private boolean canMake;
     private int limit;
@@ -27,9 +28,13 @@ public class Item {
 
     public Item(String iname) {
         name = iname;
-        urlname = cleanWord(name);
+        urlname = cleanWord(iname);
         itemfile = findFile();
-
+        masterAlias = findMaster();
+        if(!masterAlias.equals(name)){
+            urlname = cleanWord(masterAlias);
+            itemfile = findFile();
+        }
         spawnText = findSpawnText();
         removeText = findRemoveText();
         canSpawn = findCanSpawn();
@@ -119,7 +124,6 @@ public class Item {
             rfile = new Scanner(itemfile);
         } catch (FileNotFoundException ex) {
         }
-
         while (curLine != null && !curLine.equals("</flags>") && rfile.hasNext()) {
             curLine = rfile.nextLine();
             if (curLine != null) {
@@ -381,6 +385,31 @@ public class Item {
         } catch (FileNotFoundException ex) {
         }
         return -1;
+    }
+    private String findMaster() {
+        String curLine = "foo";
+        String text = "";
+        Scanner rfile = null;
+        try {
+            rfile = new Scanner(itemfile);
+        } catch (FileNotFoundException ex) {
+        }
+        while (curLine != null && !curLine.equals("</aliases>") && rfile.hasNext()) {
+            curLine = rfile.nextLine();
+            if (curLine != null) {
+                if (curLine.startsWith("<aliases>")) {
+                    curLine = rfile.nextLine();
+                    if(curLine.equals("</aliases>")){
+                        return name;
+                    }else{
+                    return curLine;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+        return "";   
     }
 
     public static String cleanWord(String word) {
