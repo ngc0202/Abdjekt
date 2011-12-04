@@ -69,6 +69,16 @@ public class World {
         }
         return false;
     }
+    
+    public boolean remove(String object) {
+         for (int i = 0; i < world.size(); i++) {
+            if (world.get(i).getName().equals(object)) {
+                world.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean contains(Item object) {
         boolean check = false;

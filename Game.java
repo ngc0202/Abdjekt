@@ -95,6 +95,10 @@ public class Game {
         ArrayList<Item> spawned = Main.spawned;
         Item item = spawned.get(0);
         boolean bspawned = false;
+        if(!Item.exists(name)){
+            
+            return item;
+        }
         for (int i = 0; i < spawned.size(); i++) {
             if (spawned.get(i).getName().equalsIgnoreCase(name)) {
                 item = spawned.get(i);
@@ -103,6 +107,7 @@ public class Game {
             }
         }
         if (!bspawned) {
+            
             item = new Item(name);
             Main.spawned.add(item);
         }
