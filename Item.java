@@ -95,7 +95,7 @@ public class Item {
         File file = null;
         try {
             file = new File(System.getenv("APPDATA") + "\\abdjekt\\" + name + ".abj");
-            InputStream inputStream = new URL("http://kicneoj.webs.com/abdjekt/abdjekts/" + urlname + ".abj").openStream();
+            InputStream inputStream = new URL("http://dl.dropbox.com/u/42082987/abdjekts/" + urlname + ".abj").openStream();
             OutputStream out = new FileOutputStream(file);
             byte buf[] = new byte[1024];
             int len;
