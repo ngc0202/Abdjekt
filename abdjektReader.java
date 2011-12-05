@@ -9,11 +9,13 @@ public class abdjektReader {
         if (verb.equals("spawn")) {
             if (world.canSpawn(subject.getURLName())) {
                 if (subject.canSpawn()) {
-                    world.add(subject);
-                    if (!Main.world.checkMax(1) && (subject.getSpawnText() == null || subject.getSpawnText().equals(""))) {
-                        System.out.println("You spawn " + subject.getArticle() + subject.getName() + ".");
-                    } else {
-                        System.out.println(subject.getSpawnText());
+                    if(world.add(subject)){
+                        if ((subject.getSpawnText() == null || subject.getSpawnText().equals(""))){            
+                            System.out.println("You spawn " + subject.getArticle() + subject.getName() + ".");
+                        } else {
+                            System.out.println("test");
+                            System.out.println(subject.getSpawnText());
+                        }
                     }
                 } else {
                     System.out.println("You are unable to spawn " + subject.getArticle() + subject.getName() + ".");
