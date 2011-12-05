@@ -23,7 +23,7 @@ public class Main {
         Scanner keyboard = new Scanner(in);
         spawned = new ArrayList<Item>();
         spawned.add(new Item("foo"));
-        world = new World(3);
+        world = new World(25);
         File file = new File(System.getenv("APPDATA") + "\\abdjekt\\foo.abj");
 
         out.println("Welcome to Abdjekt!");
