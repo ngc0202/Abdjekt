@@ -53,10 +53,13 @@ public class World {
         return nouns;
     }
 
-    public void add(Item object) {
-        world.add(object);
+    public boolean add(Item object) {
         if (checkMax(1)) {
             System.out.println("The world is full, please remove or destroy an object.");
+            return false;
+        }else{
+            world.add(object);
+            return true;
         }
     }
 
