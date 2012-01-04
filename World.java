@@ -1,13 +1,11 @@
 package abdjekt;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class World {
 
-//    private Item[] world;
     private ArrayList<Item> world;
     private int limit;
 
@@ -22,15 +20,6 @@ public class World {
         }
         return false;
     }
-    /*
-    public int length(){
-    if(world.isEmpty()){
-    return 0;
-    } else {
-    return world.size();
-    }
-    }
-     */
 
     public String show() {
         String nouns = "";
@@ -53,13 +42,10 @@ public class World {
         return nouns;
     }
 
-    public boolean add(Item object) {
+    public void add(Item object) {
+        world.add(object);
         if (checkMax(1)) {
             System.out.println("The world is full, please remove or destroy an object.");
-            return false;
-        }else{
-            world.add(object);
-            return true;
         }
     }
 

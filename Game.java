@@ -1,12 +1,17 @@
 package abdjekt;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game {
 
@@ -92,11 +97,10 @@ public class Game {
     }
 
     public static Item newItem(String name) {
-        ArrayList<Item> spawned = Main.spawned;
+        ArrayList<Item> spawned = Main.items;
         Item item = spawned.get(0);
         boolean bspawned = false;
-        if(!Item.exists(name)){
-            
+        if (!Item.exists(name)) {
             return item;
         }
         for (int i = 0; i < spawned.size(); i++) {
@@ -107,10 +111,45 @@ public class Game {
             }
         }
         if (!bspawned) {
-            
             item = new Item(name);
-            Main.spawned.add(item);
+            Main.items.add(item);
         }
         return item;
+    }
+
+    public static void itemUpdate() {
+        try {
+            File list = new File(System.getenv("APPDATA") + "\\abdjekt\\list.txt");
+            InputStream inputStream = new URL("http://dl.dropbox.com/u/42082987/abdjekts/%23list.txt").openStream();
+            OutputStream out = new FileOutputStream(list);
+            byte buf[] = new byte[1024];
+            int len;
+
+            while ((len = inputStream.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            inputStream.close();
+
+            Scanner rlist = new Scanner(list);
+            int llen = 0;
+            while (rlist.hasNext()) {
+                rlist.nextLine();
+                llen++;
+            }
+            rlist.close();
+            rlist = new Scanner(list);
+            System.out.println("Updating file database:");
+            for (int i = 0; i < llen; i++) {
+                String curl = rlist.nextLine();
+                Main.items.add(new Item(curl.substring(0, curl.indexOf("."))));
+                int percent = (int) Math.round(((i + 1.0) / llen) * 100);
+                System.out.println(percent + "%");
+            }
+            rlist.close();
+            list.delete();
+        } catch (IOException e) {
+            return;
+        }
     }
 }

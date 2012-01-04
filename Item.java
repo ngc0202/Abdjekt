@@ -108,7 +108,6 @@ public class Item {
             while ((len = inputStream.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-            out.flush();
             out.close();
             inputStream.close();
         } catch (IOException e) {

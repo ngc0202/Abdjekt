@@ -14,19 +14,21 @@ public class Main {
     public static int withIndex;
     public static String object;
     public static World world;
-    public static ArrayList<Item> spawned;
+    public static ArrayList<Item> items;
 
     public static void main(String[] args) {
         File dir = new File(System.getenv("APPDATA") + "\\abdjekt\\");
         dir.mkdir();
 
         Scanner keyboard = new Scanner(in);
-        spawned = new ArrayList<Item>();
-        spawned.add(new Item("foo"));
+        items = new ArrayList<Item>();
+        items.add(new Item("foo"));
         world = new World(25);
-        File file = new File(System.getenv("APPDATA") + "\\abdjekt\\foo.abj");
 
         out.println("Welcome to Abdjekt!");
+        out.println();
+        Game.itemUpdate();
+        out.println();
         out.println("To spawn an object, use: spawn <noun>. To remove them, use: remove <noun>");
         out.println("To look at what you have spawned, type: look.");
         out.println("To remove everything that is spawned, type: clean.");
