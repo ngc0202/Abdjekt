@@ -1,8 +1,6 @@
 package abdjekt;
 
-import java.io.File;
 import static java.lang.System.*;
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -14,20 +12,20 @@ public class Main {
     public static int withIndex;
     public static String object;
     public static World world;
-    public static ArrayList<Item> items;
+    public static Item[] items = new Item[0];
 
     public static void main(String[] args) {
-        File dir = new File(System.getenv("APPDATA") + "\\abdjekt\\");
-        dir.mkdir();
 
         Scanner keyboard = new Scanner(in);
-        items = new ArrayList<Item>();
-        items.add(new Item("foo"));
         world = new World(25);
 
         out.println("Welcome to Abdjekt!");
         out.println();
-        Game.itemUpdate();
+        if(Game.itemUpdate()){
+            System.out.println("Successfully loaded " + items.length + " items into the database!");
+        } else {
+            System.out.println("There was an error loading the Abdjekt database. You may not be able to interact with any items.");
+        }
         out.println();
         out.println("To spawn an object, use: spawn <noun>. To remove them, use: remove <noun>");
         out.println("To look at what you have spawned, type: look.");
@@ -169,11 +167,11 @@ public class Main {
             if (object.equals("")) {
                 object = "foo";
             }
-            if (!Item.exists(subject) || subject.equalsIgnoreCase("foo")) {
+            if (!Game.exists(subject) || subject.equalsIgnoreCase("foo")) {
                 System.out.println("What is a " + subject + "?");
                 continue;
             }
-            abdjektReader.process(Game.newItem(subject), Game.newItem(object), verb);
+            abdjektReader.process(Game.getItem(subject), Game.getItem(object), verb);
         }
     }
 }

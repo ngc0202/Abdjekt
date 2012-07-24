@@ -2,48 +2,41 @@ package abdjekt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
+import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Item {
+public class Item implements Serializable {
 
     private String name;
     private String urlname;
     private String spawnText;
     private String removeText;
     private String masterAlias;
-    private boolean canSpawn;
+    private boolean canSpawnNotFreely;
     private boolean canMake;
     private int limit;
     private String article;
     private String[][] actions;
     private String[][] outputs;
     private String[][] makeReqs;
-    private File itemfile;
 
-    public Item(String iname) {
-        name = iname;
-        urlname = cleanWord(iname);
-        itemfile = findFile();
-        masterAlias = findMaster();
-        if(!masterAlias.equals(name)){
+    public Item(File file) {
+        name = file.getName().substring(0, file.getName().length() - 4);
+        urlname = cleanWord(name);
+        masterAlias = findMaster(file);
+        if (!masterAlias.equals(name)) {
             urlname = cleanWord(masterAlias);
-            itemfile = findFile();
         }
-        spawnText = findSpawnText();
-        removeText = findRemoveText();
-        canSpawn = findCanSpawn();
-        article = findArticle();
-        actions = findActions();
-        outputs = findOutputs();
-        canMake = findCanMake();
-        makeReqs = findMakeReqs();
-        limit = findLimit();
+        spawnText = findSpawnText(file);
+        removeText = findRemoveText(file);
+        canSpawnNotFreely = findCanSpawnNotFree(file);
+        article = findArticle(file);
+        actions = findActions(file);
+        outputs = findOutputs(file);
+        canMake = findCanMake(file);
+        makeReqs = findMakeReqs(file);
+        limit = findLimit(file);
 
     }
 
@@ -63,9 +56,8 @@ public class Item {
         return removeText;
     }
 
-    public final boolean canSpawn() {
-        canSpawn = this.findCanSpawn();
-        return canSpawn;
+    public final boolean canSpawnNotFree() {
+        return canSpawnNotFreely;
     }
 
     public final String getArticle() {
@@ -80,10 +72,6 @@ public class Item {
         return outputs;
     }
 
-    public final File getItemFile() {
-        return itemfile;
-    }
-
     public final boolean canMake() {
         return canMake;
     }
@@ -96,26 +84,7 @@ public class Item {
         return limit;
     }
 
-    private File findFile() {
-        File file = null;
-        try {
-            file = new File(System.getenv("APPDATA") + "\\abdjekt\\" + name + ".abj");
-            InputStream inputStream = new URL("http://dl.dropbox.com/u/42082987/abdjekts/" + urlname + ".abj").openStream();
-            OutputStream out = new FileOutputStream(file);
-            byte buf[] = new byte[1024];
-            int len;
-
-            while ((len = inputStream.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            inputStream.close();
-        } catch (IOException e) {
-        }
-        return file;
-    }
-
-    private String findSpawnText() {
+    private String findSpawnText(File itemfile) {
         String curLine = "foo";
         String text = "";
         Scanner rfile = null;
@@ -139,7 +108,7 @@ public class Item {
         return "";
     }
 
-    private String findRemoveText() {
+    private String findRemoveText(File itemfile) {
         String curLine = "foo";
         String parameters = "";
         Scanner rfile = null;
@@ -164,32 +133,24 @@ public class Item {
         return "";
     }
 
-    private boolean findCanSpawn() {
-        if (Game.getMode() == 2) {
-            Scanner rfile = null;
-            try {
-                rfile = new Scanner(itemfile);
-            } catch (FileNotFoundException ex) {
-            }
-            String curLine = "foo";
-            boolean check = true;
-            while (curLine != null && !curLine.equals("</flags>") && rfile.hasNext()) {
-                if (curLine.startsWith("nospawn")) {
-                    check = false;
-                }
-                curLine = rfile.nextLine();
-            }
-            return check;
-        } else {
-            if (limit == -1) {
-                return true;
-            } else {
-                return Main.world.getCount(this) < limit;
-            }
+    private boolean findCanSpawnNotFree(File itemfile) {
+        Scanner rfile = null;
+        try {
+            rfile = new Scanner(itemfile);
+        } catch (FileNotFoundException ex) {
         }
+        String curLine = "foo";
+        boolean check = true;
+        while (curLine != null && !curLine.equals("</flags>") && rfile.hasNext()) {
+            if (curLine.startsWith("nospawn")) {
+                check = false;
+            }
+            curLine = rfile.nextLine();
+        }
+        return check;
     }
 
-    private String findArticle() {
+    private String findArticle(File itemfile) {
         Scanner rfile = null;
         try {
             rfile = new Scanner(itemfile);
@@ -224,7 +185,7 @@ public class Item {
         return "a ";
     }
 
-    private String[][] findActions() {
+    private String[][] findActions(File itemfile) {
         String curLine = "foo";
         String[] dactions = new String[20];
         int count = 0;
@@ -254,7 +215,7 @@ public class Item {
         return sractions;
     }
 
-    private String[][] findOutputs() {
+    private String[][] findOutputs(File itemfile) {
         String curLine = "foo";
         String[] doutputs = new String[20];
         int count = 0;
@@ -284,7 +245,7 @@ public class Item {
         return sroutputs;
     }
 
-    private String[][] findMakeReqs(String object) {
+    private String[][] findMakeReqs(File itemfile) {
         String[][] reqs = new String[2][5];
         Scanner abjread = null;
         try {
@@ -293,12 +254,15 @@ public class Item {
         }
         String curLine = "foo";
         String reqsline = null;
-        while (curLine != null && !curLine.equals("</flags")) {
+        while (curLine != null && !curLine.equals("</flags>")) {
             if (curLine.startsWith("make")) {
                 reqsline = curLine;
                 break;
             }
             curLine = abjread.nextLine();
+        }
+        if (reqsline == null) {
+            return reqs;
         }
         Scanner lr = new Scanner(reqsline);
         String[] plainreqs = new String[reqs.length * 2];
@@ -316,7 +280,7 @@ public class Item {
         return reqs;
     }
 
-    private boolean findCanMake() {
+    private boolean findCanMake(File itemfile) {
         boolean check = false;
         Scanner rfile = null;
         try {
@@ -334,42 +298,7 @@ public class Item {
         return check;
     }
 
-    private String[][] findMakeReqs() {
-        String[][] reqs = new String[2][5];
-        Scanner rfile = null;
-        try {
-            rfile = new Scanner(itemfile);
-        } catch (FileNotFoundException ex) {
-        }
-        String curLine = "foo";
-        String reqsline = null;
-        while (curLine != null && !curLine.equals("</flags>") && rfile.hasNext()) {
-            if (curLine.startsWith("make")) {
-                reqsline = curLine;
-                break;
-            }
-            curLine = rfile.nextLine();
-        }
-        if (reqsline == null) {
-            return new String[0][0];
-        }
-        Scanner lr = new Scanner(reqsline);
-        String[] plainreqs = new String[reqs.length * 2];
-        lr.next();
-        for (int i = 1; i < plainreqs.length + 1; i++) {
-            plainreqs[i - 1] = lr.next();
-        }
-
-        for (int i = 0; i < plainreqs.length / 2; i++) {
-            if (plainreqs[2 * i] != null) {
-                reqs[0][i] = plainreqs[2 * i]; //reqs[0][x] is nums
-                reqs[1][i] = plainreqs[2 * i + 1]; //reqs[1][x] is objects
-            }
-        }
-        return reqs;
-    }
-
-    private int findLimit() {
+    private int findLimit(File itemfile) {
         try {
             Scanner file = new Scanner(itemfile);
             String[] acur;
@@ -385,7 +314,8 @@ public class Item {
         }
         return -1;
     }
-    private String findMaster() {
+
+    private String findMaster(File itemfile) {
         String curLine = "foo";
         String text = "";
         Scanner rfile = null;
@@ -398,17 +328,17 @@ public class Item {
             if (curLine != null) {
                 if (curLine.startsWith("<aliases>")) {
                     curLine = rfile.nextLine();
-                    if(curLine.equals("</aliases>")){
+                    if (curLine.equals("</aliases>")) {
                         return name;
-                    }else{
-                    return curLine;
+                    } else {
+                        return curLine;
                     }
                 }
             } else {
                 break;
             }
         }
-        return "";   
+        return "";
     }
 
     public static String cleanWord(String word) {
@@ -429,16 +359,5 @@ public class Item {
             }
         }
         return cleanword;
-    }
-
-    public static boolean exists(String name) {
-        try {
-            if (Game.getObjectReader(name).readLine().equals("<abdjekt>")) {
-                return true;
-            }
-        } catch (IOException ex) {
-        } catch (NullPointerException npe) {
-        }
-        return false;
     }
 }

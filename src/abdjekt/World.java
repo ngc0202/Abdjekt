@@ -1,8 +1,6 @@
 package abdjekt;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class World {
 
@@ -58,9 +56,9 @@ public class World {
         }
         return false;
     }
-    
+
     public boolean remove(String object) {
-         for (int i = 0; i < world.size(); i++) {
+        for (int i = 0; i < world.size(); i++) {
             if (world.get(i).getName().equals(object)) {
                 world.remove(i);
                 return true;
@@ -107,29 +105,8 @@ public class World {
         boolean check = true;
         for (int i = 0; i < reqs[0].length; i++) {
             if (reqs[0][i] != null && reqs[1][i] != null) {
-                if (getCount(Game.newItem(reqs[1][i])) != Integer.parseInt(reqs[0][i])) {
+                if (getCount(Game.getItem(reqs[1][i])) != Integer.parseInt(reqs[0][i])) {
                     check = false;
-                }
-            }
-        }
-        return check;
-    }
-
-    public boolean canMake(String iobject) {
-        boolean check = false;
-        if (canSpawn(iobject)) {
-            Item object = Game.newItem(iobject);
-            Scanner rfile = null;
-            try {
-                rfile = new Scanner(object.getItemFile());
-            } catch (FileNotFoundException ex) {
-            }
-            String curline = "foo";
-            while (curline != null && !curline.equals("</flags>")) {
-                curline = rfile.nextLine();
-                if (curline.startsWith("make")) {
-                    check = true;
-                    break;
                 }
             }
         }
@@ -140,16 +117,14 @@ public class World {
         return world.size();
     }
 
-    public boolean canSpawn(String name) {
-        for (int i = 0; i < world.size(); i++) {
-            if (world.get(i).getName().equals(name)) {
-                return true;
-            }
+    public boolean canSpawn(Item item) {
+        if (item.getLimit() > this.getCount(item)) {
+            return false;
         }
-        if (Item.exists(name)) {
-            return true;
+        if (!item.canSpawnNotFree()) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public boolean isSpawned(Item item) {

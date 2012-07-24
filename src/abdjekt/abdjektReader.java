@@ -7,8 +7,8 @@ public class abdjektReader {
         World world = Main.world;
 
         if (verb.equals("spawn")) {
-            if (world.canSpawn(subject.getURLName())) {
-                if (subject.canSpawn()) {
+            if (Game.exists(subject.getURLName())) {
+                if (world.canSpawn(subject)) {
                     world.add(subject);
                     if (!Main.world.checkMax(1) && (subject.getSpawnText() == null || subject.getSpawnText().equals(""))) {
                         System.out.println("You spawn " + subject.getArticle() + subject.getName() + ".");
@@ -24,7 +24,7 @@ public class abdjektReader {
             return;
         }
         if (verb.equals("remove")) {
-            if (world.canSpawn(subject.getURLName())) {
+            if (world.contains(subject)) {
                 if (world.remove(subject)) {
                     if (subject.getRemoveText().equals("")) {
                         System.out.println("You remove " + subject.getArticle() + subject.getName() + ".");
@@ -45,38 +45,34 @@ public class abdjektReader {
             return;
         }
         if (verb.equals("make")) {
-            if (world.canMake(subject.getURLName())) {
-                if (subject.canMake()) {
-                    if (world.hasReqs(subject.getMakeReqs())) {
-                        world.add(subject);
-                        String[][] reqs = subject.getMakeReqs();
-                        for (int i = 0; i < reqs[0].length; i++) {
-                            if (reqs[0][i] != null && reqs[1][i] != null) {
-                                for (int k = 0; k < Integer.parseInt(reqs[0][i]); k++) {
-                                    world.remove(Game.newItem(reqs[1][i]));
-                                }
-                            }
-                        }
-                        System.out.println("You successfully create " + subject.getArticle() + subject.getName() + ".");
-                    } else {
-                        System.out.print("To create " + subject.getArticle() + subject.getName() + ", you need ");
-                        String[][] reqs = subject.getMakeReqs();
-                        for (int i = 0; i < reqs[1].length - 1; i++) {
-                            if (reqs[0][i] != null && reqs[1][i] != null) {
-                                System.out.print(reqs[0][i] + " ");
-                                if (reqs[0][i + 1] != null && reqs[1][i + 1] != null) {
-                                    System.out.print(reqs[1][i] + ", ");
-                                } else {
-                                    System.out.println(reqs[1][i] + ".");
-                                }
+            if (subject.canMake()) {
+                if (world.hasReqs(subject.getMakeReqs())) {
+                    world.add(subject);
+                    String[][] reqs = subject.getMakeReqs();
+                    for (int i = 0; i < reqs[0].length; i++) {
+                        if (reqs[0][i] != null && reqs[1][i] != null) {
+                            for (int k = 0; k < Integer.parseInt(reqs[0][i]); k++) {
+                                world.remove(Game.getItem(reqs[1][i]));
                             }
                         }
                     }
+                    System.out.println("You successfully create " + subject.getArticle() + subject.getName() + ".");
                 } else {
-                    System.out.println("You cannot craft " + subject.getArticle() + subject.getName() + ".");
+                    System.out.print("To create " + subject.getArticle() + subject.getName() + ", you need ");
+                    String[][] reqs = subject.getMakeReqs();
+                    for (int i = 0; i < reqs[1].length - 1; i++) {
+                        if (reqs[0][i] != null && reqs[1][i] != null) {
+                            System.out.print(reqs[0][i] + " ");
+                            if (reqs[0][i + 1] != null && reqs[1][i + 1] != null) {
+                                System.out.print(reqs[1][i] + ", ");
+                            } else {
+                                System.out.println(reqs[1][i] + ".");
+                            }
+                        }
+                    }
                 }
             } else {
-                System.out.println("What is a " + Main.subject + "?");
+                System.out.println("You cannot craft " + subject.getArticle() + subject.getName() + ".");
             }
             return;
         }
@@ -85,7 +81,6 @@ public class abdjektReader {
             return;
         }
         if (!world.isSpawned(object)) {
-            //System.out.println("There is no " + object.getName() + " here.");
             System.out.println("There is no " + Main.object + " here.");
             return;
         }
@@ -141,17 +136,17 @@ public class abdjektReader {
         }
         for (int i = 2; i < actionArray[found].length; i++) {
             if (actionArray[found][i].equals("spawn")) {
-                if (actionArray[found][found+1].equals("<object>")){
-                    world.add(Game.newItem(subject.getName()));
-                }else{
-                    world.add(Game.newItem(Item.cleanWord(actionArray[found][i + 1])));
+                if (actionArray[found][found + 1].equals("<object>")) {
+                    world.add(Game.getItem(subject.getName()));
+                } else {
+                    world.add(Game.getItem(Item.cleanWord(actionArray[found][i + 1])));
                 }
             }
             if (actionArray[found][i].equals("remove")) {
-                if (actionArray[found][i+1].equals("<object>")){
-                world.remove(subject.getName());
-                }else{
-                    world.remove(Game.newItem(actionArray[found][i + 1]));   
+                if (actionArray[found][i + 1].equals("<object>")) {
+                    world.remove(subject.getName());
+                } else {
+                    world.remove(Game.getItem(actionArray[found][i + 1]));
                 }
             }
             if (actionArray[found][i].equals("clean")) {
