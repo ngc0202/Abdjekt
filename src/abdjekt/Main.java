@@ -21,8 +21,14 @@ public class Main {
 
         out.println("Welcome to Abdjekt!");
         out.println();
-        if(Game.itemUpdate()){
-            System.out.println("Successfully loaded " + items.length + " items into the database!");
+
+        long start = System.nanoTime();
+        boolean updated = Game.itemUpdate();
+        long end = System.nanoTime();
+        String elapsed = String.valueOf((end - start) / 1000000000.0);
+        String selapsed = elapsed.substring(0, elapsed.indexOf(".")+3);
+        if (updated) {
+            System.out.println("Successfully loaded " + items.length + " items into the database! (" + selapsed + "s)");
         } else {
             System.out.println("There was an error loading the Abdjekt database. You may not be able to interact with any items.");
         }
